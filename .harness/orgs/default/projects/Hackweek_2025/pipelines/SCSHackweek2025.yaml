@@ -35,11 +35,7 @@ pipeline:
                     shell: Bash
                     command: |-
                       echo "hello"
-                      echo "<+pipeline.triggeredBy.comment>"
-                      echo "<+pipeline.triggerType>"
-                      echo "<+pipeline.triggeredBy.name>"
-                      echo "<+pipeline.triggeredBy.email>"
-                      echo "<+pipeline.triggeredBy.triggerIdentifier>"
+                      echo "<+trigger.prTitle>"
 
                       echo -e "FROM ubuntu:20.04\nRUN apt update && apt install -y netcat-openbsd" > Dockerfile
               - step:

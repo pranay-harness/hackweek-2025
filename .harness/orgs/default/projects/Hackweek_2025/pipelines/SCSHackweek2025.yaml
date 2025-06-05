@@ -1,0 +1,54 @@
+pipeline:
+  name: SCS-Hackweek-2025
+  identifier: SCSHackweek2025
+  projectIdentifier: Hackweek_2025
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: Build
+        identifier: Build
+        description: ""
+        type: CI
+        spec:
+          cloneCodebase: false
+          caching:
+            enabled: true
+            override: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: sscsplay
+              namespace: shashwat
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: Run
+                  name: Build Code
+                  identifier: Build_Code
+                  spec:
+                    connectorRef: pranaydocker
+                    image: ubuntu:22.04
+                    shell: Bash
+                    command: |-
+                      echo "hello"
+                      cd ..
+                      echo "<+pipeline.triggeredBy.comment>"
+                      echo "<+pipeline.triggerType>"
+                      echo "<+pipeline.triggeredBy.name>"
+                      echo "<+pipeline.triggeredBy.email>"
+                      echo "<+pipeline.triggeredBy.triggerIdentifier>"
+
+                      echo 'FROM ubuntu:20.04\nRUN apt update && apt install -y netcat-openbsd' > Dockerfile
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: pranaydocker
+                    repo: pranaycshah/todolist-demo
+                    tags:
+                      - hackweek2025
